@@ -1,0 +1,56 @@
+apply plugin: 'java'
+apply plugin: 'war'
+
+apply plugin: 'eclipse'
+apply plugin: 'tomcat'
+
+sourceCompatibility = 1.7
+
+group = 'com.github.shaxbee'
+version = '1.0'
+
+buildscript {
+    repositories {
+        mavenRepo(url: 'http://jcenter.bintray.com')  
+    }
+    dependencies {
+        classpath 'org.gradle.api.plugins:gradle-tomcat-plugin:1.0'
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    springVersion = '3.2.2.RELEASE'
+    jerseyVersion = '1.17.1'
+
+    tomcatVersion = '7.0.52'
+}
+
+dependencies {
+    compile 'javax.annotation:javax.annotation-api:1.2'
+    compile 'javax.ws.rs:jsr311-api:1.1.1'
+
+    compile "org.springframework:spring-core:${springVersion}"
+    compile "org.springframework:spring-context:${springVersion}"
+    compile "org.springframework:spring-web:${springVersion}"
+
+    compile "com.sun.jersey:jersey-core:${jerseyVersion}"
+    compile "com.sun.jersey:jersey-server:${jerseyVersion}"
+    compile "com.sun.jersey:jersey-servlet:${jerseyVersion}"
+    compile "com.sun.jersey:jersey-json:${jerseyVersion}"
+    compile("com.sun.jersey.contribs:jersey-spring:${jerseyVersion}") {
+        exclude group: 'org.springframework'
+    }
+
+    testCompile 'junit:junit:4.11'
+
+    tomcat "org.apache.tomcat.embed:tomcat-embed-core:${tomcatVersion}",
+           "org.apache.tomcat.embed:tomcat-embed-logging-juli:${tomcatVersion}"
+    tomcat("org.apache.tomcat.embed:tomcat-embed-jasper:${tomcatVersion}") {
+        exclude group: 'org.eclipse.jdt.core.compiler', module: 'ecj'
+    } 
+}
+
